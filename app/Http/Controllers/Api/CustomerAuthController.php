@@ -35,23 +35,23 @@ class CustomerAuthController extends ApiController
         );
     }
 
-    public function logout()
-    {
-        if (auth('customer')->check()) {
-            auth('customer')->user()->token()->revoke();
-            return $this->formatGeneralResponse(
-                config('messages.authentication.authentication_logout_success'),
-                config('staticdata.status_codes.ok'),
-                config('staticdata.http_codes.success')
-            );
-        }
+    // public function logout()
+    // {
+    //     if (auth('customer')->check()) {
+    //         auth('customer')->user()->token()->revoke();
+    //         return $this->formatGeneralResponse(
+    //             config('messages.authentication.authentication_logout_success'),
+    //             config('staticdata.status_codes.ok'),
+    //             config('staticdata.http_codes.success')
+    //         );
+    //     }
 
-        return $this->formatErrorResponse(
-            [config('messages.authentication.authentication_error')],
-            config('staticdata.status_codes.authentication_error'),
-            config('staticdata.http_codes.unauthorized')
-        );
-    }
+    //     return $this->formatErrorResponse(
+    //         [config('messages.authentication.authentication_error')],
+    //         config('staticdata.status_codes.authentication_error'),
+    //         config('staticdata.http_codes.unauthorized')
+    //     );
+    // }
 
     public function register(CustomerAuthRequest $request)
     {
@@ -177,21 +177,21 @@ class CustomerAuthController extends ApiController
         );
     }
 
-    public function authCheck()
-    {
-        $user = request()->user('customer');
-        $userArray = $user->toArray();
+    // public function authCheck()
+    // {
+    //     $user = request()->user('customer');
+    //     $userArray = $user->toArray();
 
-        $otpSettings = GeneralSetting::where('name', 'otp_bypass')->first();
+    //     $otpSettings = GeneralSetting::where('name', 'otp_bypass')->first();
 
-        //middleware should already performed necessary check
-        return $this->formatDataResponse(
-            [
-                'user' => $userArray,
-                'otp_bypass' => (empty($otpSettings) || !empty($otpSettings) && $otpSettings->value == 'false') ? false : true
-            ],
-            config('staticdata.status_codes.ok'),
-            config('staticdata.http_codes.success')
-        );
-    }
+    //     //middleware should already performed necessary check
+    //     return $this->formatDataResponse(
+    //         [
+    //             'user' => $userArray,
+    //             'otp_bypass' => (empty($otpSettings) || !empty($otpSettings) && $otpSettings->value == 'false') ? false : true
+    //         ],
+    //         config('staticdata.status_codes.ok'),
+    //         config('staticdata.http_codes.success')
+    //     );
+    // }
 }
