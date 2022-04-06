@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\CustomerAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,13 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     ['namespace' => 'Api', 'as' => 'api.', 'prefix' => 'v1'],
     function () {
-        Route::post('/login', 'CustomerAuthController@login')->name('login');
-        Route::post('/register', 'CustomerAuthController@register')->name('register');
-
-        //give two times more atteempt for api call... another throttle for sms is already in place
-        $otpThrottle = (config("staticdata.throttle.otp.attempt") * 2) . "," . config("staticdata.throttle.otp.decay") . ",otp";
-        Route::post('/sendOTP', 'CustomerAuthController@sendOTP')->name('sendOTP')->middleware("throttle_customer:$otpThrottle");
-        Route::post('/verifyOTP', 'CustomerAuthController@verifyOTP')->name('verifyOTP');
-        Route::post('/reset', 'CustomerAuthController@reset')->name('reset');
+        Route::post('/login', [CustomerAuthController::class, 'login']);
     }
 );
