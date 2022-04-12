@@ -24,7 +24,6 @@ class CustomerAuthRequest extends ApiRequest
     public function rules()
     {
         $routeName = $this->route()->getName();
-        dd($routeName);
 
 
         if ($routeName == 'api.login') {
