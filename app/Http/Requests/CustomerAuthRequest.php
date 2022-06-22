@@ -25,12 +25,11 @@ class CustomerAuthRequest extends ApiRequest
     {
         $routeName = $this->route()->getName();
 
-
         if ($routeName == 'api.login') {
-            $rules['password'] = 'required';
-            $rules['firebase_token'] = 'nullable|string|max:255';
+            return [
+                'email' => 'required|email',
+                'password' => 'required'
+            ];
         }
-
-        return $rules;
     }
 }
