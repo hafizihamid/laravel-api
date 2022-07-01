@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\CustomerAuthController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Admin
 Route::group(
-    ['namespace' => 'Api', 'as' => 'api.', 'prefix' => 'v1'],
+    ['prefix' => 'admin', 'as' => 'admin.'],
     function () {
-        Route::post('/login', [CustomerAuthController::class, 'login']);
+        Route::post('/login', "AuthController@login")->name('login');
     }
 );

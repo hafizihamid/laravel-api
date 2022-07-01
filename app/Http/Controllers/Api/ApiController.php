@@ -10,52 +10,52 @@ class ApiController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs;
 
-    protected $status_code;
-    protected $http_code;
+    protected $statusCode;
+    protected $httpCode;
 
     public function __construct()
     {
-        $this->status_code = config('staticdata.status_codes');
-        $this->http_code = config('staticdata.http_codes');
+        $this->statusCode = config('staticdata.status_codes');
+        $this->httpCode = config('staticdata.http_codes');
     }
 
-    public function formatPaginatedDataResponse($message, $status_code, $http_code)
+    public function formatPaginatedDataResponse($message, $statusCode, $httpCode)
     {
         $response = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
         ];
         $response = array_merge($response, $message->toArray());
 
-        return response()->json($response, $http_code);
+        return response()->json($response, $httpCode);
     }
 
-    public function formatDataResponse($message, $status_code, $http_code)
+    public function formatDataResponse($message, $statusCode, $httpCode)
     {
         $response = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
             'data' => $message
         ];
 
-        return response()->json($response, $http_code);
+        return response()->json($response, $httpCode);
     }
 
-    public function formatGeneralResponse($message, $status_code, $http_code)
+    public function formatGeneralResponse($message, $statusCode, $httpCode)
     {
         $response = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
             'message' => $message
         ];
 
-        return response()->json($response, $http_code);
+        return response()->json($response, $httpCode);
     }
 
-    public function formatErrorResponse($data, $status_code = null, $http_response = null)
+    public function formatErrorResponse($data, $statusCode = null, $http_response = null)
     {
-        $status_code = $status_code ?? config('staticdata.status_codes.error');
+        $statusCode = $statusCode ?? config('staticdata.status_codes.error');
         $http_response = $http_response ?? config('staticdata.http_codes.internal_server_error');
 
         $message = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
             'errors' => $data,
         ];
 
@@ -64,12 +64,11 @@ class ApiController extends BaseController
 
     public function formatResourceResponse($data, $user_id = null, $http_response = null, $message = null)
     {
-        // http response will be OK by default
-        $status_code = $status_code ?? config('staticdata.status_codes.ok');
+        $statusCode = $statusCode ?? config('staticdata.status_codes.ok');
         $http_response = $http_response ?? config('staticdata.http_codes.success');
 
         $response = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
             'data' => $data
         ];
 
@@ -84,13 +83,13 @@ class ApiController extends BaseController
         return response()->json($response, $http_response);
     }
 
-    public function formatValidationResponse($data, $status_code = null, $http_response = null)
+    public function formatValidationResponse($data, $statusCode = null, $http_response = null)
     {
-        $status_code = $status_code ?? config('staticdata.status_codes.validation_failed');
+        $statusCode = $statusCode ?? config('staticdata.status_codes.validation_failed');
         $http_response = $http_response ?? config('staticdata.http_codes.unprocessable_entity');
 
         $message = [
-            'status_code' => $status_code,
+            'status_code' => $statusCode,
             'detail' => config('messages.general.validation_failed'),
             'field' => $data
         ];
