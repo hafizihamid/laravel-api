@@ -36,4 +36,17 @@ return [
         'reset_password_path' => env('FRONTEND_RESET_PASSWORD_PATH', '/reset?token={token}&email={email}'),
         'set_password_path' => env('FRONTEND_SET_PASSWORD_PATH', '/set?token={token}&email={email}'),
     ],
+
+    'user_credential' => [
+        'superadmin' => [
+            'email' => 'superadmin@gmail.com',
+            'name' => 'superadmin',
+            'password' => 'hafizi123',
+        ],
+    ],
+
+    'token_scopes' => [
+        'admin',
+        'customer',
+    ],
 ];
