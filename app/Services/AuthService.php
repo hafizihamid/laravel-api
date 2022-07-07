@@ -42,12 +42,55 @@ class AuthService extends BaseService
             $user->blocked_until = null;
             $user->save();
         }
-    
+        
+        if (auth()->attempt($credentials->all())) {
+            $accessToken = $user->createToken('authToken', ['admin'])->accessToken;
+            $userDetails = $this->getUserWithRolesPermissions($user);
+
+            $user->tries = 0;
+
+            $data = [
+                'user' => $userDetails,
+                'accessToken' => $accessToken,
+            ];
+        } else {
+            if ($user->tries < 5) {
+                $user->tries += 1;
+                $user->save();
+                if ($user->tries == 5) {
+                    $user->blocked_until = $now->addHour();
+                    $user->save();
+                    return $this->formatGeneralResponse(
+                        config('messages.authentication.authentication_user_blocked') . $user->blocked_until,
+                        config('staticdata.status_codes.forbidden'),
+                        config('staticdata.http_codes.forbidden')
+                    );
+                }
+
+                return $this->formatGeneralResponse(
+                    config('messages.authentication.invalid_login_credentials'),
+                    config('staticdata.status_codes.authentication_error'),
+                    config('staticdata.http_codes.unauthorized')
+                );
+            }
+        }
+
         $user->save();
         return $this->formatGeneralResponse(
             $data,
             config('staticdata.status_codes.ok'),
             config('staticdata.http_codes.success')
         );
+    }
+
+    public function getUserWithRolesPermissions($user)
+    {
+        $userArray = $user->toArray();
+        $roles = $user->roles->pluck('name');
+        $permissions = ($user->getAllPermissions()->pluck('name'));
+        $userArray['roles'] = $roles;
+        $userArray['permissions'] = $permissions;
+
+        return $userArray;
     }
 }
