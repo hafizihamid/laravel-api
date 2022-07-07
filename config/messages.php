@@ -49,5 +49,5 @@ return [
         'user_already_verified' => 'User already verified',
         'user_location_disabled' => 'User do not have active location',
         'invalid_login_credentials' => 'Invalid login credentials! Please try again',
-    ]
+    ],
 ];
