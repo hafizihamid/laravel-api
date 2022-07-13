@@ -37,10 +37,15 @@ return [
         'set_password_path' => env('FRONTEND_SET_PASSWORD_PATH', '/set?token={token}&email={email}'),
     ],
 
+    'email' => [
+        'mail_to_address' => env('MAIL_TO_ADDRESS'),
+        'mail_to_name' => env('MAIL_TO_NAME'),
+    ],
+
     'user_credential' => [
         'superadmin' => [
-            'email' => 'superadmin@gmail.com',
-            'name' => 'superadmin',
+            'email' => 'hafizihamid92@gmail.com',
+            'name' => 'hafizi',
             'password' => 'hafizi123',
         ],
     ],
