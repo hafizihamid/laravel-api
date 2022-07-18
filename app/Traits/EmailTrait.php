@@ -11,11 +11,13 @@ trait EmailTrait
 {
     public function sendResetPasswordEmail($email, $token)
     {
-        $email = 'mail@hotmail.com';
+        $linkEmail = str_replace("{token}", $token, config('staticdata.frontend.reset_password_path'));
+        $linkEmail = str_replace("{email}", urlencode($email), $linkEmail);
+        $linkEmail = config('staticdata.frontend.url') . $linkEmail;
    
         $mailInfo = [
-            'title' => 'Welcome New User',
-            'url' => 'https://www.remotestack.io'
+            'title' => config('app.name') . " - Password Reset",
+            'url' => $linkEmail
         ];
   
         Mail::to($email)->send(new ResetPasswordMail($mailInfo));

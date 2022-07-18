@@ -1,12 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 
-// Admin
 Route::group(
-    ['prefix' => 'admin', 'as' => 'admin.'],
+    ['namespace' => 'Api', 'as' => 'api.', 'prefix' => 'v1'],
     function () {
-        Route::post('/login', [AuthController::class, 'login']);
+        // Admin
+        Route::group(
+            ['prefix' => 'admin', 'as' => 'admin.'],
+            function () {
+                Route::post('/login', 'AuthController@login')->name('login');
+                Route::group(
+                    ['prefix' => 'password', 'as' => 'password.'],
+                    function () {
+                        Route::post('/forgot', 'AuthController@forgot')->name('forgot');
+                    }
+                );
+            }
+        );
     }
 );

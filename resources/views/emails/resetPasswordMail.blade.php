@@ -1,10 +1,10 @@
 @component('mail::message')
 {{ $mailInfo['title'] }}
 
-Congratulations! Your account has been created.
+To reset your password, click on the button below:
 
 @component('mail::button', ['url' => $mailInfo['url']])
-Cheers!
+Reset Password
 @endcomponent
 
 Thanks,<br>
