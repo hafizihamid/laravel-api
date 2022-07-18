@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\SetPasswordRequest;
 use App\Services\AuthService;
 
 class AuthController extends ApiController
@@ -38,6 +39,24 @@ class AuthController extends ApiController
     {
         $data = $this->authService->forgot($request);
 
+        if ($data['status'] != config('staticdata.status_codes.ok')) {
+            return $this->formatErrorResponse(
+                [$data['message']],
+                $data['status'],
+                $data['http_code']
+            );
+        }
+
+        return $this->formatGeneralResponse(
+            $data['message'],
+            $data['status'],
+            $data['http_code']
+        );
+    }
+
+    public function reset(SetPasswordRequest $request)
+    {
+        $data = $this->authService->reset($request->all());
 
         if ($data['status'] != config('staticdata.status_codes.ok')) {
             return $this->formatErrorResponse(

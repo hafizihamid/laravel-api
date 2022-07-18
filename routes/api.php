@@ -14,6 +14,7 @@ Route::group(
                     ['prefix' => 'password', 'as' => 'password.'],
                     function () {
                         Route::post('/forgot', 'AuthController@forgot')->name('forgot');
+                        Route::post('/reset', 'AuthController@reset')->name('reset');
                     }
                 );
             }

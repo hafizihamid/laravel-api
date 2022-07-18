@@ -114,6 +114,42 @@ class AuthService extends BaseService
         );
     }
 
+    public function reset($credentials)
+    {
+        $userInstance = null;
+
+        $resetPasswordStatus = Password::reset(
+            $credentials,
+            function ($user, $password) use (&$userInstance) {
+                $user->password = Hash::make($password);
+                $user->save();
+                $userInstance = $user;
+            }
+        );
+
+        if ($resetPasswordStatus == Password::PASSWORD_RESET) {
+            //revoke all token for safety reason
+            if ($userInstance instanceof \App\Models\User) {
+                $userTokens = $userInstance->tokens;
+                foreach ($userTokens as $token) {
+                    $token->revoke();
+                }
+            }
+
+            return $this->formatGeneralResponse(
+                config("messages.authentication.authentication_reset_successful"),
+                config('staticdata.status_codes.ok'),
+                config('staticdata.http_codes.success')
+            );
+        } else {
+            return $this->formatGeneralResponse(
+                config("messages.authentication.authentication_reset_invalid_token"),
+                config('staticdata.status_codes.authentication_error'),
+                config('staticdata.http_codes.bad_request')
+            );
+        }
+    }
+
     public function getUserWithRolesPermissions($user)
     {
         $userArray = $user->toArray();
