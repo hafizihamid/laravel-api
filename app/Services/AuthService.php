@@ -95,6 +95,12 @@ class AuthService extends BaseService
                     config('staticdata.http_codes.forbidden')
                 );
             }
+        } else {
+            return $this->formatGeneralResponse(
+                config('messages.authentication.user_not_found'),
+                config('staticdata.status_codes.forbidden'),
+                config('staticdata.http_codes.forbidden')
+            );
         }
 
         try {
