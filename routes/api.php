@@ -15,6 +15,7 @@ Route::group(
                     function () {
                         Route::post('/forgot', 'AuthController@forgot')->name('forgot');
                         Route::post('/reset', 'AuthController@reset')->name('reset');
+                        Route::post('/validate-reset-token', 'AuthController@validateResetPasswordToken')->name('validateResetToken');
                     }
                 );
             }
