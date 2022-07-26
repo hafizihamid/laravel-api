@@ -42,7 +42,7 @@ class AuthService extends BaseService
             $user->blocked_until = null;
             $user->save();
         }
-        
+
         if (auth()->attempt($credentials->all())) {
             $accessToken = $user->createToken('authToken', ['admin'])->accessToken;
             $userDetails = $this->getUserWithRolesPermissions($user);
@@ -154,6 +154,20 @@ class AuthService extends BaseService
                 config('staticdata.http_codes.bad_request')
             );
         }
+    }
+
+    public function validateResetPasswordToken($credentials)
+    {
+        $password_resets = DB::table('password_resets')->where('email', $email)->first();
+
+        if ($password_resets && Hash::check($token, $password_resets->token)) {
+            $createdAt = Carbon::parse($password_resets->created_at);
+            if (!Carbon::now()->greaterThan($createdAt->addMinutes(config('auth.passwords.users.expire')))) {
+                return \response()->json()->setStatusCode(200);
+            }
+        }
+
+        return \response()->json()->setStatusCode(419);
     }
 
     public function getUserWithRolesPermissions($user)
