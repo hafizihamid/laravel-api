@@ -21,7 +21,7 @@ class AdminAuthControllerTest extends TestCase
     {
         $data = [
             'email' => config('staticdata.user_credential.superadmin.email'),
-            'password' => config('staticdata.user_credential.superadmin.password')
+            'password' => config('staticdata.user_credential.superadmin.password'),
         ];
 
 
@@ -29,14 +29,14 @@ class AdminAuthControllerTest extends TestCase
 
         $response->assertJson(
             [
-                'status_code' => config('staticdata.status_codes.ok')
+                'status_code' => config('staticdata.status_codes.ok'),
             ]
         )->assertJsonStructure(
             [
                 'status_code',
                 'data' => [
                     'user',
-                    'accessToken'
+                    'accessToken',
                 ]
             ]
         );
@@ -47,7 +47,7 @@ class AdminAuthControllerTest extends TestCase
         $response = $this->post(route('api.admin.login'));
         $response->assertJson(
             [
-                'status_code' => config('staticdata.status_codes.validation_failed')
+                'status_code' => config('staticdata.status_codes.validation_failed'),
             ]
         );
     }
@@ -56,7 +56,7 @@ class AdminAuthControllerTest extends TestCase
     {
         $data = [
             'email' => "login_failed@gmail.com",
-            'password' => "Test1234!"
+            'password' => "Test1234!",
         ];
 
         $response = $this->post(route('api.admin.login'), $data);
