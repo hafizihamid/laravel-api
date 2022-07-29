@@ -54,4 +54,10 @@ return [
         'admin',
         'customer',
     ],
+
+    'passwords' => [
+        'reset' => [
+            'expire' => 60,
+        ],
+    ],
 ];
