@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\SetPasswordRequest;
-use App\Http\Requests\validateResetPasswordToken;
+use App\Http\Requests\ValidateResetTokenRequest;
 use App\Services\AuthService;
 
 class AuthController extends ApiController
@@ -204,9 +204,53 @@ class AuthController extends ApiController
         );
     }
 
+
+    /**
+     * @OA\Post(
+     *      path="api/v1/admin/password/validate-reset-token",
+     *      operationId="validateResetTokenAdmin",
+     *      tags={"Admin"},
+     *      summary="Admin Validate Reset Token",
+     *      description="To validate reset password token",
+     *      @OA\RequestBody(
+     *      required=true,
+     *      description="To validate reset password token",
+     *      @OA\JsonContent(
+     *         required={"email","token"},
+     *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *       @OA\Property(property="token", type="string", format="token", example="token123"),
+     *         ),
+     *       ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Success",
+     *          @OA\JsonContent(
+     *              type="string",
+     *              example={"status_code":"00","message":"Valid reset token."},
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *          @OA\JsonContent(
+     *              type="string",
+     *              example={"status_code":"23","errors":{"Invalid reset token."}},
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *              type="string",
+     *              example={"status_code":"21","detail":"Validation Failed!","field":{"email":"The email field is required.","token":"The token field is required."}},
+     *          )
+     *      ),
+     * )
+     */
+
     public function validateResetPasswordToken(ValidateResetTokenRequest $request)
     {
-        $data = $this->authService->forgot($request);
+        $data = $this->authService->validateResetPasswordToken($request);
 
         if ($data['status'] != config('staticdata.status_codes.ok')) {
             return $this->formatErrorResponse(
