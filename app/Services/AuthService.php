@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
 
 class AuthService extends BaseService
 {
@@ -158,16 +159,32 @@ class AuthService extends BaseService
 
     public function validateResetPasswordToken($credentials)
     {
-        $password_resets = DB::table('password_resets')->where('email', $email)->first();
+        $passwordResets = DB::table('password_resets')->where('email', $credentials->email)->first();
 
-        if ($password_resets && Hash::check($token, $password_resets->token)) {
-            $createdAt = Carbon::parse($password_resets->created_at);
-            if (!Carbon::now()->greaterThan($createdAt->addMinutes(config('auth.passwords.users.expire')))) {
-                return \response()->json()->setStatusCode(200);
+        if (!$passwordResets) {
+            return $this->formatGeneralResponse(
+                config("messages.authentication.email_not_found"),
+                config('staticdata.status_codes.authentication_error'),
+                config('staticdata.http_codes.bad_request')
+            );
+        }
+
+        if ($passwordResets && Hash::check($token, $passwordResets->token)) {
+            $createdAt = Carbon::parse($passwordResets->created_at);
+            if (!Carbon::now()->greaterThan($createdAt->addMinutes(config('auth.passwords.reset.expire')))) {
+                return $this->formatGeneralResponse(
+                    config("messages.authentication_reset_valid_token"),
+                    config('staticdata.status_codes.ok'),
+                    config('staticdata.http_codes.success')
+                );
             }
         }
 
-        return \response()->json()->setStatusCode(419);
+        return $this->formatGeneralResponse(
+            config("messages.authentication.authentication_reset_invalid_token"),
+            config('staticdata.status_codes.authentication_error'),
+            config('staticdata.http_codes.bad_request')
+        );
     }
 
     public function getUserWithRolesPermissions($user)
