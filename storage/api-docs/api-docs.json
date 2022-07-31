@@ -300,6 +300,93 @@
                     }
                 }
             }
+        },
+        "api/v1/admin/password/validate-reset-token": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Validate Reset Token",
+                "description": "To validate reset password token",
+                "operationId": "validateResetTokenAdmin",
+                "requestBody": {
+                    "description": "To validate reset password token",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@mail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "format": "token",
+                                        "example": "token123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "status_code": "00",
+                                    "message": "Valid reset token."
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "status_code": "23",
+                                    "errors": [
+                                        "Invalid reset token."
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "status_code": "21",
+                                    "detail": "Validation Failed!",
+                                    "field": {
+                                        "email": "The email field is required.",
+                                        "token": "The token field is required."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
